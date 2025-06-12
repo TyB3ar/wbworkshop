@@ -31,9 +31,10 @@ def level_1():
     choice_1 = input("Go left(a) or right(b)?: ").strip().lower()
     
     if choice_1 == "a":
-        choice_1_left()  
+        return choice_1_left() 
+         
     else: 
-        choice_1_right()
+        return choice_1_right()
         
 def choice_1_left():
     print("You find a river full of glittering fish 🐟\n") 
