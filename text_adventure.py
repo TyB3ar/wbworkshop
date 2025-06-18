@@ -91,7 +91,8 @@ def level_2():
         
         if answer == "a":
             # move to level 3, solved the riddle 
-            print("You've solved the riddle! The wizard congradulates you, and let's you continue on.\n") 
+            print("You've solved the riddle! The wizard congradulates you, and gives you a map!\n")
+            inventory.append("map") 
             return 3
         elif answer == "b":
             # incorrect answer, send back to level 1
@@ -118,7 +119,8 @@ def level_2():
         
         if answer == "a":
             # move to level 3, solved the riddle 
-            print("You've solved the riddle! The wizard congradulates you, and let's you continue on.\n") 
+            print("You've solved the riddle! The wizard congradulates you, and gives you a map!\n")
+            inventory.append("map") 
             return 3
         elif answer == "b":
             # incorrect answer, send back to level 1
@@ -128,20 +130,124 @@ def level_2():
             # giving up, back to level 
             print("The wizard insults your lack of effort, then casts a spell, you see a bright light, then you wake up back in the mysterious forest.\n")
             return 1 
-        
-     
-    
-    
-
  
     
     
 def level_3(): 
-    pass 
+    print("You continue along the path, when suddenly a fork in the road appears...\n")
+    
+    path_choice = input("Will you (a) Go left, (b) Go right, or (c) Use map:  ").strip().lower() 
+    
+    # If we go left
+    if path_choice == 'a':
+        print("You come across a dark mysterious cave! You hear a strange sound coming from inside, and you venture on in... \n")
+        print("There's a goblin! He looks to be holding some kind of key.\n")
+        
+        if "Glittering Fish" in inventory:
+            offering = input("Will you (a) Take the key from them or (b) Offer them 'Glittering Fish': ").strip().lower()
+        
+            if offering == 'a':
+                print("You steal the key and run away as fast as you can. As you run, the goblin curses you!\n")
+                inventory.append('key')
+                inventory.append("goblin curse")      
+            elif offering == 'b':
+                print("You offer the goblin a 'Glittering Fish' in exchange for the key. He happily accepts and starts devouring the fish!\n")
+                inventory.remove("Glittering Fish")
+                inventory.append("key")
+        else:
+            goblin = input("Will you (a) Take the key from them or (b) Ask nicely for the key: ").strip().lower()
+            
+            if goblin == 'a':
+                print("You steal the key and run away as fast as you can. As you run, the goblin curses you!\n")
+                inventory.append('key')
+                inventory.append("goblin curse") 
+            else:
+                print("Since you asked politely, the goblin hands you the key.")
+                inventory.append("key")  
+        
+            
+        print("You continue along the path...\n")
+        return 4
+            
+    # If we go right 
+    elif path_choice == 'b':
+        return 4  
+    # If we use map 
+    else:
+        print("You read the map, and it leads to a large castle said to have treasure! It tells you to turn right at the fork and continue on.")
+        return 4  
+
 
 def level_4():
-    pass 
+    print("You see a castle in distance, and make your way towards it.\n")
+    augment_condition = 1 if "goblin curse" in inventory else 0
+    level_4_augment = {
+        "first": [
+            "welcome you nicely",
+            "snear at you as you pass",
+        ],
+        "second": [
+            "allow you to pass",
+            "block your way",
+        ],
+    }
+    
+    print(f'You walk up to the castle guards, who {level_4_augment["first"][augment_condition]}.\n')
+    
+    if augment_condition == 1:
+        print("The grand king looks upon with fear, and removes you from his court.\n")
+        break_curse()
+    else:
+        pass 
+    
+    if "key" in inventory:
+        print("The grand king welcomes you in with open arms, and gives you a treasure chest as congratulations.\n")
+        win() 
+    else:
+        print("The grand king welcomes you in, and invites you to his royal feast.\n")
+        return 5 
+    
 
+'''
+1. we have key and no curse
+2. we have no key  
+3. We have curse
+4. we have option to break the curse 
+
+- Make functions for winning or breaking the curse 
+
+'''
+
+def win():
+    print("Congratulations! You have completed the quest and won the game!") 
+    return 5
+
+
+def break_curse():
+    # Return to goblin to break the curse
+    option_1 = input("The head knight offers a solution: (a) Go to the church and repent (b) Return to the goblin")
+    
+    if option_1 == 'a':
+        print("You go the church and pray for the curse to be releaseed.\n")
+        inventory.remove("goblin curse")
+        return 4
+    else:
+        print("You return to the goblin, and they tell you must solve their riddle for the curse to be broken.\n")
+        riddle = input(
+            """When I am alive I do not speak. 
+            Anyone who wants to takes me captive and cuts off my head. 
+            They bite my bare body I do no harm to anyone unless they cut me first. 
+            Then I soon make them cry.\n 
+            (a) Onion (b) Goblin?  \n""")
+        
+        if riddle == 'a':
+            print("You have solved the goblin's riddle, and the curse has been broken!\n")
+            inventory.remove("goblin curse")
+            return 4 
+        else:
+            print("The goblin has forgotten the answer.... He lifts the curse off of you\n")
+            inventory.remove("goblin curse")
+            return 4
 
 def main():
     # While resest is false, we go through
@@ -150,6 +256,13 @@ def main():
     print(instructions)
     current = 1
     while True:
+        # View inventory option
+        view_items = input("Would you like to view your current inventory? Yes(a) or No(b): \n")
+        
+        if view_items == 'a':
+            print(f'Current Inventory: {', '.join(inventory)}\n') 
+        else:
+            pass 
         if current == 1:
             current = level_1()
         elif current == 2:
